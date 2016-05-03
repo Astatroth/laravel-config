@@ -1,17 +1,37 @@
-<?php
-
-namespace Astatroth\LaravelConfig;
+<?php namespace Astatroth\LaravelConfig;
 
 use Illuminate\Filesystem\Filesystem;
 
 class FileWriter
 {
+    /**
+     * The filesystem instance.
+     *
+     * @var \Illuminate\Filesystem\Filesystem
+     */
     protected $files;
 
+    /**
+     * The default configuration path.
+     *
+     * @var string
+     */
     protected $defaultPath;
 
+    /**
+     * The config rewriter object.
+     *
+     * @var \Astatroth\LaravelConfig\Rewrite
+     */
     protected $rewriter;
 
+    /**
+     * Create a new file configuration loader.
+     *
+     * @param  \Illuminate\Filesystem\Filesystem  $files
+     * @param  string  $defaultPath
+     * @return void
+     */
     public function __construct(Filesystem $files, $defaultPath)
     {
         $this->files = $files;
@@ -22,10 +42,8 @@ class FileWriter
     public function write($item, $value, $filename)
     {
         $path = $this->getPath($item, $filename);
-
-        if (!$path) {
+        if (!$path)
             return false;
-        }
 
         $contents = $this->files->get($path);
         $contents = $this->rewriter->toContent($contents, [$item => $value]);
@@ -36,10 +54,10 @@ class FileWriter
     private function getPath($item, $filename)
     {
         $file = "{$this->defaultPath}/{$filename}.php";
-
-        if ($this->files->exists($file) && $this->hasKey($file, $item)) {
+        if ( $this->files->exists($file) &&
+            $this->hasKey($file, $item)
+        )
             return $file;
-        }
 
         return null;
     }
@@ -47,19 +65,14 @@ class FileWriter
     private function hasKey($path, $key)
     {
         $contents = file_get_contents($path);
-
         $vars = eval('?>'.$contents);
 
         $keys = explode('.', $key);
 
         $isset = false;
-
         while ($key = array_shift($keys)) {
             $isset = isset($vars[$key]);
-
-            if (is_array($vars[$key])) {
-                $vars = $vars[$key];
-            }
+            if (is_array($vars[$key])) $vars = $vars[$key]; // Go down the rabbit hole
         }
 
         return $isset;

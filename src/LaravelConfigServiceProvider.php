@@ -7,22 +7,25 @@ use Illuminate\Support\ServiceProvider;
 class LaravelConfigServiceProvider extends ServiceProvider
 {
     /**
-     * Register the application services.
+     * Register the service provider.
      *
      * @return void
      */
     public function register()
     {
-        $this->app->singleton('Astatroth\LaravelConfig\Repository', function($app, $items) {
+        // Bind it only once so we can reuse in IoC
+        $this->app->singleton('October\Rain\Config\Repository', function($app, $items)
+        {
             $writer = new FileWriter($app['files'], $app['path.config']);
-
             return new Repository($items, $writer);
         });
 
-        $configItems = app('config')->all();
+        // Capture the loaded configuration items
+        $config_items = app('config')->all();
 
-        $this->app['config'] = $this->app->share(function($app) use ($configItems) {
-            return $app->make('Astatroth\LaravelConfig\Repository', $configItems);
+        $this->app['config'] = $this->app->share(function($app) use ($config_items)
+        {
+            return $app->make('October\Rain\Config\Repository', $config_items);
         });
     }
 }
