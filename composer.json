@@ -1,0 +1,31 @@
+{
+  "name": "astatroth/laravel-config",
+  "description": "An extension of the Config component, it adds the ability to write to configuration files.",
+  "version": "1.0.0",
+  "require": {
+    "php": ">=5.4",
+    "illuminate/config": "5.2.*"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alexey Bobkov",
+      "email": "aleksey.bobkov@gmail.com"
+    },
+    {
+      "name": "Samuel Georges",
+      "email": "daftspunky@gmail.com"
+    },
+    {
+      "name": "Astatroth",
+      "email": "astatroth@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/",
+      "Astatroth\\LaravelConfig": "src/"
+    }
+  }
+}
