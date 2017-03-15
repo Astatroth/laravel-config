@@ -28,7 +28,7 @@ That's it!
 
 ## Usage
 
-Usade is as simple as 
+Usage is as simple as 
 ```php
 Config::write($key, $value);
 ```
